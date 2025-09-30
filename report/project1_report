@@ -1,0 +1,39 @@
+# COE 379L – Project 1 Report
+
+**Name:** Shaunak Kapur  
+**Course:** COE 379L – Software Design for Responsible Intelligent Systems  
+
+---
+
+## 1) Data Preparation
+I began by inspecting the dataset (131,165 rows, 12 columns). I dropped 17 duplicate rows, normalized column names, and handled missing values. For categorical variables (e.g., Sex upon Outcome, Animal Type), I imputed missing values with the mode. Rows missing the target (Outcome Type) were dropped. Age upon Outcome was converted into a numeric variable in days. Finally, I dropped irrelevant or high-cardinality columns (Animal ID, Date of Birth, DateTime, MonthYear, Breed, Color, and Name) to reduce complexity and prevent crashes.
+
+---
+
+## 2) Insights from EDA
+Exploratory analysis showed that about 64% of animals were adopted and about 36% were transferred. Most animals were cats and dogs, with a smaller portion being birds and other species. Younger animals were more likely to be adopted, which was confirmed by the age distribution analysis. Sex upon Outcome revealed that spayed/neutered animals were more likely to be adopted.
+
+---
+
+## 3) Modeling Procedure
+I trained three models to predict the Outcome Type (Adoption vs Transfer). The dataset was split into 80% training and 20% testing, stratified to preserve class balance. Each model used a preprocessing pipeline (scaling numeric features, imputing missing values, and one-hot encoding categorical features).
+
+The models were:
+- **KNN baseline with k=5**
+- **KNN with GridSearchCV** (tested k = [3, 5, 7] on a 2,000-row subsample with 2-fold CV to prevent crashes)
+- **Logistic Regression** with the saga solver (optimized for sparse data)
+
+---
+
+## 4) Performance & Metrics
+Results on the test set:
+- **KNN (k=5)**: Accuracy 0.864, Adoption recall 0.931, Transfer recall 0.748, macro F1 = 0.849.  
+- **KNN (GridSearchCV, k=7)**: Accuracy 0.835, Adoption recall 0.905, Transfer recall 0.711, macro F1 = 0.816.  
+- **Logistic Regression**: Accuracy 0.883, Adoption recall 0.963, Transfer precision 0.919, macro F1 = 0.867.  
+
+Logistic Regression performed best overall, offering the highest accuracy and macro F1. It was especially strong in recall for Adoptions, which is important since missing true adoptions could mean animals are incorrectly predicted as transfers.
+
+---
+
+## 5) Confidence & Limitations
+I am confident in the performance of the Logistic Regression model, as it was consistent across metrics. Limitations include excluding high-cardinality columns (Breed, Color, Name) to avoid crashes, which may omit predictive signals. Additionally, GridSearchCV had to be run on a reduced sample due to computational constraints, which likely limited its effectiveness. Finally, the dataset reflects shelter-specific biases, so results may not generalize directly to other locations.
