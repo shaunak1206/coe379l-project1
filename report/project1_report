@@ -1,39 +1,106 @@
 # COE 379L – Project 1 Report
 
-**Name:** Shaunak Kapur  
-**Course:** COE 379L – Software Design for Responsible Intelligent Systems  
+Name: Shaunak Kapur
+Course: COE 379L – Software Design for Responsible Intelligent Systems
 
----
+------------------------------------------------------------
 
 ## 1) Data Preparation
-I began by inspecting the dataset (131,165 rows, 12 columns). I dropped 17 duplicate rows, normalized column names, and handled missing values. For categorical variables (e.g., Sex upon Outcome, Animal Type), I imputed missing values with the mode. Rows missing the target (Outcome Type) were dropped. Age upon Outcome was converted into a numeric variable in days. Finally, I dropped irrelevant or high-cardinality columns (Animal ID, Date of Birth, DateTime, MonthYear, Breed, Color, and Name) to reduce complexity and prevent crashes.
 
----
+To begin the project, I examined the dataset, which contained 131,165 rows and 12 columns
+representing information about shelter animals and their outcomes. I started by cleaning the
+data to ensure it was consistent and ready for modeling.
 
-## 2) Insights from EDA
-Exploratory analysis showed that about 64% of animals were adopted and about 36% were transferred. Most animals were cats and dogs, with a smaller portion being birds and other species. Younger animals were more likely to be adopted, which was confirmed by the age distribution analysis. Sex upon Outcome revealed that spayed/neutered animals were more likely to be adopted.
+I first removed 17 duplicate rows and standardized column names for easier reference. Then,
+I addressed missing values. For categorical variables (such as Sex upon Outcome and Animal Type),
+I filled missing entries using the mode — the most frequent value — since this approach preserves
+the distribution of each feature. Rows missing the target variable (Outcome Type) were removed, as
+they could not contribute to model training.
 
----
+The column Age upon Outcome, originally stored as a string (e.g., “2 years,” “3 weeks”), was
+converted into a numeric variable in days, allowing for direct comparison across animals of different
+ages. I also dropped several columns that were either irrelevant, redundant, or had too many unique
+values (high cardinality), such as Animal ID, Date of Birth, DateTime, MonthYear, Breed, Color, and
+Name. These fields were unlikely to improve predictive performance and would increase memory usage
+or risk overfitting.
+
+After these preprocessing steps, the resulting dataset was smaller, more balanced, and computationally
+manageable, which helped prevent program crashes during training.
+
+------------------------------------------------------------
+
+## 2) Insights from Exploratory Data Analysis (EDA)
+
+Before modeling, I conducted an Exploratory Data Analysis (EDA) to understand key trends.
+Approximately 64% of animals were adopted, while 36% were transferred, showing that adoption was
+the dominant outcome. The majority of animals were dogs and cats, with smaller groups consisting
+of birds, rabbits, and other species.
+
+A notable trend emerged regarding age: younger animals had a significantly higher likelihood
+of adoption. Visualizing the age distribution confirmed that the probability of adoption decreased
+as the animal’s age increased.
+
+The Sex upon Outcome feature also provided meaningful insight. Animals that were spayed or neutered
+had substantially higher adoption rates compared to those that were intact. This may reflect adopter
+preferences for sterilized pets or shelter policies that promote adoption of animals ready for home
+environments.
+
+Overall, these findings suggested that age, species, and sterilization status were among the most
+influential predictors for adoption likelihood.
+
+------------------------------------------------------------
 
 ## 3) Modeling Procedure
-I trained three models to predict the Outcome Type (Adoption vs Transfer). The dataset was split into 80% training and 20% testing, stratified to preserve class balance. Each model used a preprocessing pipeline (scaling numeric features, imputing missing values, and one-hot encoding categorical features).
 
-The models were:
-- **KNN baseline with k=5**
-- **KNN with GridSearchCV** (tested k = [3, 5, 7] on a 2,000-row subsample with 2-fold CV to prevent crashes)
-- **Logistic Regression** with the saga solver (optimized for sparse data)
+The primary goal was to build a model that could predict the animal’s outcome type — specifically
+whether an animal would be adopted or transferred.
 
----
+I split the dataset into 80% training and 20% testing sets, using stratified sampling to preserve
+the ratio of adoption to transfer outcomes in both subsets. For preprocessing, I used a scikit-learn
+pipeline that handled numeric scaling, imputation for missing values, and one-hot encoding of
+categorical features.
 
-## 4) Performance & Metrics
-Results on the test set:
-- **KNN (k=5)**: Accuracy 0.864, Adoption recall 0.931, Transfer recall 0.748, macro F1 = 0.849.  
-- **KNN (GridSearchCV, k=7)**: Accuracy 0.835, Adoption recall 0.905, Transfer recall 0.711, macro F1 = 0.816.  
-- **Logistic Regression**: Accuracy 0.883, Adoption recall 0.963, Transfer precision 0.919, macro F1 = 0.867.  
+Three different models were trained and compared:
+  1. K-Nearest Neighbors (KNN) baseline with k = 5
+  2. KNN with GridSearchCV (k = [3, 5, 7]) using 2-fold cross-validation on a 2,000-row subsample
+  3. Logistic Regression with the saga solver, optimized for sparse, one-hot encoded data
 
-Logistic Regression performed best overall, offering the highest accuracy and macro F1. It was especially strong in recall for Adoptions, which is important since missing true adoptions could mean animals are incorrectly predicted as transfers.
+This modeling process allowed for both a simple baseline and a more interpretable linear model
+for comparison.
 
----
+------------------------------------------------------------
 
-## 5) Confidence & Limitations
-I am confident in the performance of the Logistic Regression model, as it was consistent across metrics. Limitations include excluding high-cardinality columns (Breed, Color, Name) to avoid crashes, which may omit predictive signals. Additionally, GridSearchCV had to be run on a reduced sample due to computational constraints, which likely limited its effectiveness. Finally, the dataset reflects shelter-specific biases, so results may not generalize directly to other locations.
+## 4) Model Performance and Metrics
+
+The models were evaluated on the held-out test set using accuracy, recall, precision, and macro F1-score.
+Results:
+
+  - KNN (k = 5): Accuracy = 0.864, Adoption Recall = 0.931, Transfer Recall = 0.748, Macro F1 = 0.849
+  - KNN (GridSearchCV, k = 7): Accuracy = 0.835, Adoption Recall = 0.905, Transfer Recall = 0.711, Macro F1 = 0.816
+  - Logistic Regression: Accuracy = 0.883, Adoption Recall = 0.963, Transfer Precision = 0.919, Macro F1 = 0.867
+
+The Logistic Regression model achieved the best overall performance. It provided the highest accuracy
+and macro F1-score, as well as excellent recall for adoption cases. This is important because incorrectly
+classifying an adoptable animal as a transfer could lead to missed adoption opportunities. Logistic
+Regression also trained quickly and consistently across runs, confirming its reliability.
+
+------------------------------------------------------------
+
+## 5) Confidence and Limitations
+
+I am confident that the Logistic Regression model is the most effective and stable for this dataset.
+It performed strongly across all key metrics and generalized well to the test data.
+
+However, there were a few limitations. To prevent memory crashes, I excluded high-cardinality columns
+like Breed, Color, and Name. While this improved computational efficiency, it may have removed valuable
+predictive information—particularly breed, which could influence adoption outcomes. Additionally, due
+to limited processing power, GridSearchCV was only run on a smaller subsample, potentially under-optimizing
+the KNN model.
+
+Finally, since the dataset reflects a specific animal shelter, the learned patterns may not generalize
+to shelters with different populations or adoption practices. Future work could address these issues by
+incorporating more compute resources, using dimensionality reduction to handle high-cardinality features,
+and validating the model on data from multiple shelters.
+
+------------------------------------------------------------
+

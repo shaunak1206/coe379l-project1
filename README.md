@@ -3,7 +3,6 @@
 This repo contains:
 - **Part 1 & 2**: Jupyter notebook (`notebooks/project1_eda_and_models.ipynb`)
 - **Part 3**: Report (`report/project1_report.pdf`)
-- **Use of AI log** (`Use_of_AI.md`)
 
 ## Dataset
 Source (class GitHub):  
