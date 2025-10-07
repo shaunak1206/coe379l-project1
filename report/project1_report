@@ -46,9 +46,8 @@ during model evaluation.
 of birds, rabbits, and other species. The top breeds included various mixed breeds and popular
 purebreds, while the most common colors were black, brown, and white combinations.
 
-**Temporal Patterns**: Analysis of outcomes over time revealed seasonal trends and fluctuations
-in adoption rates, which could be valuable for shelter resource planning and understanding
-adoption patterns throughout the year.
+**Temporal Patterns**: Analysis of outcomes over time suggested fluctuations in adoption rates, which 
+could reflect seasonal or policy-driven trends.
 
 **Age and Adoption**: A notable trend emerged regarding age: younger animals had a significantly
 higher likelihood of adoption. Visualizing the age distribution confirmed that the probability
@@ -96,7 +95,7 @@ The models were evaluated on the held-out test set using accuracy, precision, re
 The comprehensive evaluation included detailed classification reports for each model:
 
 **KNN (k = 5)**: Accuracy = 0.864, Precision = 0.863, Recall = 0.839, Macro F1 = 0.849
-**KNN (GridSearchCV - Limited Features)**: Accuracy = 0.835, Precision = 0.828, Recall = 0.808, Macro F1 = 0.816  
+**KNN (GridSearchCV - Limited Features)**: Accuracy = 0.853, Precision = 0.861, Recall = 0.818, Macro F1 = 0.832  
 **Perceptron**: Accuracy = 0.838, Precision = 0.827, Recall = 0.819, Macro F1 = 0.823
 
 **How does the model perform to predict the class?**
