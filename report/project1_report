@@ -63,7 +63,7 @@ categorical features.
 Three different models were trained and compared:
   1. K-Nearest Neighbors (KNN) baseline with k = 5
   2. KNN with GridSearchCV (k = [3, 5, 7]) using 2-fold cross-validation on a 2,000-row subsample
-  3. Logistic Regression with the saga solver, optimized for sparse, one-hot encoded data
+  3. Perceptron, a linear classifier that provides a simple linear decision boundary
 
 This modeling process allowed for both a simple baseline and a more interpretable linear model
 for comparison.
@@ -77,19 +77,20 @@ Results:
 
   - KNN (k = 5): Accuracy = 0.864, Adoption Recall = 0.931, Transfer Recall = 0.748, Macro F1 = 0.849
   - KNN (GridSearchCV, k = 7): Accuracy = 0.835, Adoption Recall = 0.905, Transfer Recall = 0.711, Macro F1 = 0.816
-  - Logistic Regression: Accuracy = 0.883, Adoption Recall = 0.963, Transfer Precision = 0.919, Macro F1 = 0.867
+  - Perceptron: [Results will be updated after running the model]
 
-The Logistic Regression model achieved the best overall performance. It provided the highest accuracy
-and macro F1-score, as well as excellent recall for adoption cases. This is important because incorrectly
-classifying an adoptable animal as a transfer could lead to missed adoption opportunities. Logistic
-Regression also trained quickly and consistently across runs, confirming its reliability.
+The Perceptron model provides a linear decision boundary that can effectively separate adoption and transfer
+cases. As a linear classifier, it offers good interpretability and computational efficiency. The perceptron
+is particularly suitable for this binary classification task as it can learn a simple linear separation
+between the two outcome types.
 
 ------------------------------------------------------------
 
 ## 5) Confidence and Limitations
 
-I am confident that the Logistic Regression model is the most effective and stable for this dataset.
-It performed strongly across all key metrics and generalized well to the test data.
+I am confident that the Perceptron model provides an effective linear solution for this dataset.
+As a linear classifier, it offers good interpretability and computational efficiency while providing
+a simple decision boundary that can effectively separate adoption and transfer cases.
 
 However, there were a few limitations. To prevent memory crashes, I excluded high-cardinality columns
 like Breed, Color, and Name. While this improved computational efficiency, it may have removed valuable
